@@ -72,32 +72,27 @@ const login = async (req, resp) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: 'please enter email and  password' })
   }
-  // const user = await sql` SELECT FROM  users  WHERE  email = ${email}`
-  // console.log('from USER Login', user)
+
   const user = await sql` SELECT * FROM  users  WHERE  email = ${email}`
-  // .then(data => {
-  //   console.log(data.cursor)
-  // })
-  console.log('from  single User', user)
 
-  // return resp.status(StatusCodes.OK).json(user)
-
-  user.forEach(async data => {
-   const passwordHashed = await data.password
-
-    const  isMatched = await comparePassword(password, passwordHashed)
-    console.log(isMatched, 'from Data compare')
-
-    if (isMatched) {
-
-    }
-  })
-
-  if (user.length === 0) {
-    // console.log(user, 'this user not Found')
+  if (user.length < 1) {
+    return resp
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ Error: 'user not found!' })
   } else {
-    // console.log('user Data exist ', user.email, user[0])
-    // console.log('user Data exist ', user)
+    user.forEach(async data => {
+      const passwordHashed = await data.password
+
+      const isMatched = await comparePassword(password, passwordHashed)
+
+      if (isMatched === false) {
+        return resp
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: 'password not matched' })
+      } else {
+        return resp.status(StatusCodes.OK).json({ Success: 'login success!' })
+      }
+    })
   }
 }
 
@@ -105,10 +100,7 @@ const comparePassword = async (password, hashedPassword) => {
   let isMatched
   await bcrypt.compare(password, hashedPassword).then(res => {
     if (res === false) {
-      // console.log('false, Not Matched')
       return (isMatched = false)
-
-      // } else console.log('true')
     }
     return (isMatched = true)
   })
