@@ -1,4 +1,5 @@
 const postgres = require('postgres')
+require('dotenv').config()
 
 const { Connection } = require('postgresql-client')
 const { Pool } = require('postgresql-client')
@@ -13,9 +14,9 @@ const { Pool } = require('postgresql-client')
 
 // const sql = postgres(sqlPool)
 
-const sql = postgres('postgres://postgres:franktest@localhost:5432/postgres')
+const sql = postgres(process.env.POSTGRES_DATABASE_URI)
 const dbPool = new Pool({
-  host: 'postgres://postgres:franktest@localhost:5432/postgres',
+  host: process.env.POSTGRES_DATABASE_URI,
   pool: {
     min: 1,
     max: 10,
