@@ -6,10 +6,14 @@ const {
   createRooms,
   getAllRooms,
   getSingleRoom,
-  deleteRoom
+  deleteRoom,
+  updateRoom
 } = require('../controllers/roomsController')
 
 router.post('/createRoom', createRooms)
-router.put('/updateRoom')
+router.put('/:id', updateRoom)
+router.get('/:id', getSingleRoom)
+router.delete('/:id', deleteRoom)
+router.get('/getRooms', getAllRooms)
 
 module.exports = router

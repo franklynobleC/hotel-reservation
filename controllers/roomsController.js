@@ -30,13 +30,23 @@ RETURNING room_number, room_type,price,number_of_occupants,availability_status,i
   console.log(createdRoom)
 }
 
-const getSingleRoom = async (req, res) => {}
+const getSingleRoom = async (req, res) => {
+  res.status(StatusCodes.OK).json({ message: 'single Room' })
+}
+const updateRoom = async (req, res) => {
+  res.status(StatusCodes.OK).json({ message: ' update Room' })
+}
 
-const deleteRoom = async (req, res) => {}
-const getAllRooms = async (req, res) => {}
+const deleteRoom = async (req, res) => {
+  res.status(StatusCodes.OK).json({ message: 'delete Room' })
+}
+const getAllRooms = async (req, res) => {
+  res.status(StatusCodes.OK).json({ message: 'All Rooms' })
+}
 module.exports = {
   createRooms,
   getSingleRoom,
   getAllRooms,
-  deleteRoom
+  deleteRoom,
+  updateRoom
 }
