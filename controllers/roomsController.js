@@ -33,9 +33,9 @@ const createRooms = async (req, res) => {
       error: ` availability status must either be "Available or  Booked"`
     })
   }
-  if (price < '5000') {
+  if (price <= '5000') {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      error: `please ensure price is greater  than 5000`
+      error: `please ensure price is greater  than ${price}`
     })
   }
 
@@ -59,17 +59,49 @@ const createRooms = async (req, res) => {
 }
 
 const getSingleRoom = async (req, res) => {
-  res.status(StatusCodes.OK).json({ message: 'single Room' })
+  const id = req.params.id
+
+  const roomId = await sql` SELECT  * FROM  rooms  WHERE   id= ${id} `
+
+  if (roomId.length < 1) {
+    res
+      .status(StatusCodes.OK)
+      .json({ error: `invalid  id ${roomId} please  enter a  valid  id` })
+  }
+  roomId.forEach(data => {
+    console.log('data  for  single  room', data)
+    res.status(StatusCodes.OK).json({ success: roomId })
+  })
 }
 const updateRoom = async (req, res) => {
   res.status(StatusCodes.OK).json({ message: ' update Room' })
 }
 
 const deleteRoom = async (req, res) => {
-  res.status(StatusCodes.OK).json({ message: 'delete Room' })
+  const id = req.params.id
+
+  const deleteData = await sql`DELETE FROM  rooms WHERE  id = ${id}`
+  if (deleteData.length < 0) {
+    res
+      .status(StatusCodes.OK)
+      .json({ error: `room  with  id ${id} not found!` })
+  }
+
+  res.status(StatusCodes.OK).json({ success: `room  with  id ${id} deleted!` })
 }
 const getAllRooms = async (req, res) => {
-  res.status(StatusCodes.OK).json({ message: 'All Rooms' })
+  try {
+    const roomsData = await sql` SELECT * FROM rooms`
+    console.log(roomsData)
+    if (roomsData.length < 1) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: `no records  found in  rooms table` })
+    }
+    res.status(StatusCodes.OK).json(roomsData)
+  } catch (error) {
+    throw new Error('an Error occurred')
+  }
 }
 module.exports = {
   createRooms,
