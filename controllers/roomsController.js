@@ -74,7 +74,48 @@ const getSingleRoom = async (req, res) => {
   })
 }
 const updateRoom = async (req, res) => {
-  res.status(StatusCodes.OK).json({ message: ' update Room' })
+  const {
+    id,
+    room_number,
+    room_type,
+    price,
+    number_of_occupants,
+    availability_status,
+    image_url,
+    room_description
+  } = req.body
+
+  console.log('dATA  ID', id, 'number  of occupants', number_of_occupants)
+  if (number_of_occupants < 1 || number_of_occupants > 4) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: `number  of occuppants must be  within  1 to 4`
+    })
+  }
+  if (availability_status !== 'Available' && availability_status !== 'Booked') {
+    console.log(availability_status)
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: ` availability status must either be "Available or  Booked"`
+    })
+  }
+  if (price <= '5000') {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: `please ensure price is greater  than ${price}`
+    })
+  }
+
+  try {
+    const updatedData = await sql`UPDATE rooms SET room_type=${room_type},
+     availability_status=${availability_status}, price=${price}, room_number =${room_number},
+    number_of_occupants=${number_of_occupants}, room_description=${room_description} WHERE  id =${id}`
+
+    res.status(StatusCodes.OK).json({ success: `data  updated successfully` })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.BAD_REQUEST).json({
+      error: `en  error  occurred ${error}
+`
+    })
+  }
 }
 
 const deleteRoom = async (req, res) => {
