@@ -9,6 +9,7 @@ const cors = require('cors')
 const authRouter = require('./routes/authRoute')
 const userRouter = require('./routes/usersRoute')
 const roomsRouter = require('./routes/roomsRoute')
+const reservationRouter = require('./routes/reservationsRoute')
 // Do something with the headers
 // const cookieParser = require('cookie-parser')
 const app = express()
@@ -25,6 +26,7 @@ app.use(express.static('./public'))
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/rooms', roomsRouter)
+app.use('/api/v1/reservations', reservationRouter)
 //   Add Port
 /* This code is setting up the server to listen on a specific port. */
 const port = process.env.PORT || 5000 // if  the Port  is  undefined, use port 5000

@@ -112,8 +112,7 @@ const updateRoom = async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(StatusCodes.BAD_REQUEST).json({
-      error: `en  error  occurred ${error}
-`
+      error: `en  error  occurred ${error}`
     })
   }
 }
@@ -143,6 +142,9 @@ const getAllRooms = async (req, res) => {
   } catch (error) {
     throw new Error('an Error occurred')
   }
+}
+const uploadImage = async (req, res) => {
+
 }
 module.exports = {
   createRooms,
