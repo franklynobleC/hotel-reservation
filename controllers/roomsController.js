@@ -162,7 +162,7 @@ const getAllRooms = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: `no records  found in  rooms table` })
     }
-   return res.status(StatusCodes.OK).json(roomsData)
+   return res.status(StatusCodes.OK).json({rooms: roomsData.data})
   } catch (error) {
     throw new Error('an Error occurred')
   }

@@ -15,30 +15,34 @@ const getAllUsers = async (req, resp) => {
 }
 const getSingleUser = async (req, resp) => {
   const { id } = req.params
+  if(isNaN(id) || id === '') {
+    return resp
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: 'Invalid ID' })
+  }
   console.log('iD Data', id)
   const singleUser = await usersTable.getUserById(id)
   if (!singleUser.data) {
     console.log(singleUser)
     return resp
       .status(StatusCodes.NOT_FOUND)
-      .json({ message: `User With ID ${id} NOT_FOUND` })
+      .json({ message: `user with id ${id} NOT_FOUND` })
   }
   return resp.status(StatusCodes.OK).json(singleUser.data)
 }
 const deleteUser = async (req, resp) => {
   const { id } = req.params
   console.log('iD Data', id)
-  const singleUser = await sql`
-   DELETE FROM  users WHERE id =${id}
-    `
-  if (!singleUser) {
+  const singleUser = await usersTable.deleteUserById(id)
+  if (singleUser.error) {
+
     return resp
       .status(StatusCodes.NOT_FOUND)
-      .json({ message: `User With ID ${id} NOT_FOUND` })
+      .json({ error: `user with id ${singleUser.error} NOT_FOUND!` })
   }
   return resp
     .status(StatusCodes.OK)
-    .json({ Success: `USER WITH  ID${id} Deleted` })
+    .json(singleUser.data)
 }
 
 module.exports = {

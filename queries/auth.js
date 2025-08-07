@@ -7,7 +7,7 @@ class  Auth {
         const  isEmailExist = await sqlPool.query('SELECT * FROM users WHERE email = $1', [email]   )
 
         if(isEmailExist.rows.length > 0) {
-            console.log('email Already Exist ********************|||||||',isEmailExist.rows)
+
             return {error: 'duplicate', data:isEmailExist.rows, message:'please enter another another email'}
         }
         return {error: 'available', message: 'email is available',data: isEmailExist.rows}
@@ -18,7 +18,7 @@ class  Auth {
          if (!name || !email || !hashedPassword) {
              return { error: 'Name, email, and password are required', message: null, data: null };
          }
-          console.log('----------------All Datas from created')
+
          //CHECK  IF  EMAIL ALREADY EXIST
 
          try {
@@ -30,10 +30,6 @@ class  Auth {
                  // Parameters passed separately
              );
 
-
-
-
-            console.log('newly inserted row')
             return {error: null, message: 'success', data: user.rows[0]}
 
         } catch (e) {

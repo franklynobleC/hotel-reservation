@@ -24,3 +24,22 @@ npm start
 - user
 - reservation
 - rooms
+
+### USER CONTROLLERS
+
+ - getAllUsers
+ - getSingleUsers
+ - deleteUser
+ - updateUser
+
+### RESERVATION CONTROLLERS
+ getAllReservations
+ - getSingleReservation
+ - deleteReservation
+ - updateReservation
+ - createReservation
+
+
+### ROOMS CONTROLLERS
+ - getAllRooms
+ - 

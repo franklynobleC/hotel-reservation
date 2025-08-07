@@ -30,7 +30,6 @@ class Rooms {
             if (!rooms.rows.length) {
                 return {error: 'no data found in  rooms table', data: [], message: 'failed to retrieve data'}
             }
-
             return {error: null, data: rooms.rows, message: 'success'}
 
     }catch(e) {
@@ -86,8 +85,8 @@ class Rooms {
             try {
 
 
-        const   deleteRoom = await sqlPool.query('DELETE  FROM rooms WHERE room_id = $1', [id])
-            if(deleteRoom.rows.length === 0) {
+        const   deleteRoom = await sqlPool.query('DELETE  FROM rooms WHERE room_id = $1 RETURNING *;', [id])
+            if(deleteRoom.rows.length === 0 || deleteRoom.rowCount === 0) {
              return  { error: `error has occurred`, data: null, message: 'no room found'}
              }
             console.log('from deleted table', deleteRoom.rows)
@@ -99,13 +98,26 @@ class Rooms {
         }
         static async allRooms () {
                     const rooms = await sqlPool.query('SELECT * FROM rooms')
-            if (!rooms.rows.length) {
+            if (!rooms.rows.length || rooms.rowCount === 0) {
                 return {error: `error has occurred`, data: null, message: 'could  not get rooms'}
             }
             else
                 return {error: null,  data: rooms.rows, message: 'success'}
 
         }
+        static async updateRoomById (id) {
+            try{
+            const updateRoom = await sqlPool.query('UPDATE rooms SET room_number = $1,room_type = $2, price = $3, availability_status = $4,image_url = $5, number_of_occupants = $6, description = $7 WHERE room_id = $6 RETURNING *;', [room_name, room_type, room_price, room_description, room_status, id])
+            if (updateRoom.rows.length === 0 || updateRoom.rowCount === 0)
+                return {error: `error has occurred`, data: null, message: 'no room found'}
+
+            console.log('from updated table', updateRoom.rows)
+
+        }catch (e) {
+                return  {error:e.message , data: null, message: 'could not update room'}
+
+            }
+    }
 }
 
 
