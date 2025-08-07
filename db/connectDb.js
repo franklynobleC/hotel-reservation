@@ -1,41 +1,33 @@
 const postgres = require('postgres')
 require('dotenv').config()
 
+
+
 const { Connection } = require('postgresql-client')
-const { Pool } = require('postgresql-client')
 
-// const sqlPool = new Pool({
-//   host: 'localhost', // Postgres ip address[s] or domain name[s]
-//   port: 5432, // Postgres server port[s]
-//   database: 'hotel', // Name of database to connect to
-//   username: 'frankessien', // Username of database user
-//   password: 'franktest' // Password of database user
-// })
+const { Pool } = require('pg')
 
-// const sql = postgres(sqlPool)
 
-const sql = postgres(process.env.POSTGRES_DATABASE_URI)
-const dbPool = new Pool({
-  host: process.env.POSTGRES_DATABASE_URI,
-  pool: {
-    min: 1,
-    max: 10,
-    idleTimeoutMillis: 5000
-  }
-})
+const sqlPool = new Pool({
+  user: process.env.USER,
+  host: process.env.HOST,
+  database: process.env.DATABASE,
+  password: process.env.PASSWORD,
+  port: process.env.PORT
+});
 
-const connectDb = async () => {
+const  getConnection =async options => {
+
   try {
-    console.log('Connected to database')
-  } catch (error) {
-    console.error(error)
+    console.log('Before connection')
+    return await sqlPool.connect(options)
+  } catch (e) {
+    console.log('connection Error')
+    console.error(e.message, e)
   }
 }
-
 module.exports = {
-  // sqlPool,
+  sqlPool,
   // sqlQuery,
-  sql,
-  connectDb,
-  dbPool
+  getConnection
 }

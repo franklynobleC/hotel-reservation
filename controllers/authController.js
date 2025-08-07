@@ -3,6 +3,7 @@ const createUserTable = require('../models/User')
 const createRoomsTable = require('../models/Rooms')
 const { StatusCodes } = require('http-status-codes')
 const { dbPool, sql } = require('../db/connectDb')
+const    Auth = require('../queries/auth')
 var bcrypt = require('bcryptjs')
 
 // const register = async (req, resp) => {
@@ -20,7 +21,7 @@ const register = async (req, resp) => {
   const { email, password, name } = req.body
 
   console.log('user Data', email, password, name)
-  const emailData = await sql` SELECT * FROM  users WHERE  email =${email}`
+  const emailData = await  Auth.isEmailExist(email)
   console.log(emailData.length)
   if (emailData.length > 0) {
     console.log(emailData, 'from Data')
@@ -43,17 +44,20 @@ const register = async (req, resp) => {
       // console.log('hashed Password', hashedPassword)
 
       try {
-        const users = await sql`
-      INSERT INTO users (name, email, password)
-      VALUES (${name}, ${email}, ${hashedPassword})
-      RETURNING name, email, password
-      `
+        const users = await  Auth.createUser(name,email,hashedPassword)
 
         console.log('from users Data', users)
+        if(!users.data > 0  || users.message === 'duplicate keys') {
+
+               return resp
+              .status(StatusCodes.BAD_REQUEST)
+              .json(`could not insert into users table ${users.error}, ${users.message}`)
+
+        }
 
         return resp
-          .status(StatusCodes.OK)
-          .json(`User added with ID: ${users.columns[1]}`)
+          .status(StatusCodes.CREATED)
+          .json(users.data)
       } catch (error) {
         console.error(error)
         return resp

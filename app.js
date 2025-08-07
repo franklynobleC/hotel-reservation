@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { connectDb } = require('./db/connectDb')
+const { connectDb, getConnection, sqlPool} = require('./db/connectDb')
 // parse application/json
 require('dotenv').config()
 const cors = require('cors')
@@ -29,11 +29,13 @@ app.use('/api/v1/rooms', roomsRouter)
 app.use('/api/v1/reservations', reservationRouter)
 //   Add Port
 /* This code is setting up the server to listen on a specific port. */
-const port = process.env.PORT || 5000 // if  the Port  is  undefined, use port 5000
+const port = 5000 // if  the Port  is  undefined, use port 5000
 
 const start = async () => {
   try {
-    connectDb()
+     await getConnection()
+    // await sqlPool.connect()
+
     // const db = await dbConnection(process.env.MONGO_URI)
   } catch (error) {
     console.log('connection Failed Error!', error)

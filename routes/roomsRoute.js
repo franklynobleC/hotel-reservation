@@ -10,10 +10,19 @@ const {
   updateRoom
 } = require('../controllers/roomsController')
 
-router.post('/createRoom', createRooms)
-router.get('/getRooms', getAllRooms)
+
+
+
 router.put('/:id', updateRoom)
-router.get('/:id', getSingleRoom)
+router.post('/createRoom', createRooms)
+
 router.delete('/:id', deleteRoom)
+router.get('/getRooms', getAllRooms)
+router.get('/:id', getSingleRoom)
+
+
+
+
+
 
 module.exports = router
