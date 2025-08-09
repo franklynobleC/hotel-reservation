@@ -4,6 +4,8 @@ const { dbPool, sql, sqlPool} = require('../db/connectDb')
 const  Rooms = require('../queries/rooms')
 var bcrypt = require('bcryptjs')
 
+
+//TODO: ADD AMENITIES TO ROOMS, THIS SHOULD BE ADD AS AN ARRAY IN THE ROOMS TABLE  IN  THE HOTEL-RESERVATION-DB
 const createdRooms = async (req, res) => {
   const {
     room_number,
@@ -14,22 +16,13 @@ const createdRooms = async (req, res) => {
     image_url,
     room_description
   } = req.body
-  console.log(
-    room_number,
-    room_type,
-    price,
-    number_of_occupants,
-    availability_status,
-    image_url,
-    room_description
-  )
-  if (number_of_occupants < 1) {
+
+  if (number_of_occupants < 1 || number_of_occupants >4) {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      error: `number  of occupants must be  at least 1`
+      error: `number  of occupants must be between 1 - 4`
     })
   }
   if (availability_status !== 'available' && availability_status !== 'booked') {
-    console.log(availability_status)
     return res.status(StatusCodes.BAD_REQUEST).json({
       error: ` availability status must either be "Available or  Booked"`
     })
@@ -37,6 +30,11 @@ const createdRooms = async (req, res) => {
   if (price <= 5000) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       error: `please ensure price is greater  than ${price}`
+    })
+  }
+  if(room_type !== 'single' && room_type !== 'double') {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: `invalid room type ${room_type} please  enter a  valid  room type`
     })
   }
 
@@ -48,7 +46,7 @@ const createdRooms = async (req, res) => {
                               availability_status,
                               image_url, room_description)
 
-    console.log('FROM CREATED ROOMS', createdRoom)
+
     if (!createdRoom.data) {
       if (createdRoom.error.includes('room_number must be unique')) {
         return res.status(StatusCodes.BAD_REQUEST).json({error:createdRoom.error})
@@ -70,7 +68,7 @@ const getSingleRoom = async (req, res) => {
   const {id} = req.params
 
   if(isNaN(id) || id === " ") {
-    console.log(id)
+
    return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: `invalid  id ${id} please  enter a  valid  id` })
@@ -94,7 +92,7 @@ const getSingleRoom = async (req, res) => {
 }
 const updateRoom = async (req, res) => {
   const {
-    id,
+    room_id,
     room_number,
     room_type,
     price,
@@ -104,54 +102,75 @@ const updateRoom = async (req, res) => {
     room_description
   } = req.body
 
-  // console.log('dATA  ID', id, 'number  of occupants', number_of_occupants)
+
   if (number_of_occupants < 1 || number_of_occupants > 4) {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      error: `number  of occuppants must be  within  1 to 4`
+      error: `number  of occupants must be  within  1 to 4`
     })
+
   }
-  if (availability_status !== 'Available' && availability_status !== 'Booked') {
-    console.log(availability_status)
+  if(room_type !== 'single' && room_type !== 'double') {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      error: ` availability status must either be "Available or  Booked"`
+      error: `invalid room type ${room_type} please  enter a  valid  room type`
     })
   }
-  if (price <= '5000') {
+
+
+  if (availability_status !== 'available' && availability_status !== 'booked') {
+
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: ` availability status must either be "available or  booked"`
+    })
+  }
+  if (price <= 5000) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       error: `please ensure price is greater  than ${price}`
     })
   }
+    let roomData = {
+    room_id,
+      room_number,
+      room_type,
+      price,
+      number_of_occupants,
+      availability_status,
+      image_url,
+      room_description
+    }
 
-  try {
-    const updatedData = await sql`UPDATE rooms SET room_type=${room_type},
-     availability_status=${availability_status}, price=${price}, room_number =${room_number},
-    number_of_occupants=${number_of_occupants}, room_description=${room_description} WHERE  id =${id}`
+  const    updatedData = await  Rooms.updateRoom(roomData)
 
-    res.status(StatusCodes.OK).json({ success: `data  updated successfully` })
-  } catch (error) {
-    console.log(error)
-    res.status(StatusCodes.BAD_REQUEST).json({
-      error: `en  error  occurred ${error}`
+  if(updatedData.error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: updatedData.error,
+      message: updatedData.message
     })
   }
+  return res.status(StatusCodes.OK).json({
+    data: updatedData.data,
+    message: 'success'}
+  )
 }
 
 const deleteRoom = async (req, res) => {
   const {id} = req.params
-  console.log(id)
 
   const deleteData = await Rooms.deleteRoomById(id)
-  console.log(deleteData.data)
 
-  if(!deleteData.data) {
+
+  if (!deleteData.data) {
     return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({error: `room  with  id ${deleteData.error} not found!`})
+        .json({error: `no room  with  id  ${deleteData.error} not found!`})
 
   }
-console.log('Deleted data',deleteData)
-  return  res.status(StatusCodes.OK).json({ success: `${id} deleted!`,
-    data:`${deleteData.data}`})}
+
+
+  return res.status(StatusCodes.OK).json({
+    success: `room with id ${id} deleted!`,
+    data: deleteData.data
+  })
+}
 
 const getAllRooms = async (req, res) => {
   try {

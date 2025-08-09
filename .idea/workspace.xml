@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79eaa1ce-5bc7-4bf7-bf72-6d908e54b4e9" name="Changes" comment="back to fixing!">
-      <change afterPath="$PROJECT_DIR$/Todo.xit" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TODO.MD" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/roomsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/roomsController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/userController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/userController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/users.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/queries/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/queries/auth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/queries/rooms.js" beforeDir="false" afterPath="$PROJECT_DIR$/queries/rooms.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/queries/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/queries/users.js" afterDir="false" />
     </list>
     <list id="8295a21c-3150-48c9-aba2-02e49691c157" name="Changes try undoing this" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,6 +36,10 @@
     <setting file="file://$PROJECT_DIR$/controllers/authController.js" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/db/connectDb.js" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="JsBowerSettings">
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -60,12 +61,14 @@
     "javascript.nodejs.core.library.typings.version": "22.17.0",
     "last_opened_file_path": "C:/myworkspace/hotel-reservation/db/connectDb.js",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "settings.editor.splitter.proportion": "0.27586207",
+    "settings.editor.selected.configurable": "preferences.sourceCode.JavaScript",
+    "settings.editor.splitter.proportion": "0.22567457",
     "ts.external.directory.path": "C:\\Users\\essie\\WebStorm 2023.1.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   },
@@ -133,7 +136,8 @@
       <workItem from="1754573568949" duration="138000" />
       <workItem from="1754573712923" duration="1497000" />
       <workItem from="1754575225523" duration="761000" />
-      <workItem from="1754578707840" duration="7086000" />
+      <workItem from="1754578707840" duration="9529000" />
+      <workItem from="1754682484493" duration="12508000" />
     </task>
     <task id="LOCAL-00001" summary="back to fixing!">
       <created>1754360492521</created>
