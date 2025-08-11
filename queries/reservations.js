@@ -11,17 +11,21 @@ class Reservations {
 		}
 	}
 	static async getSingleReservations(id) {
-		const reservation = sqlPool.query(`SELECT * FROM reservations WHERE id = ${id}`)
-		if(reservation.rowCount === 0) {
-			return {error: 'no data found in  reservations table', data: [], message: 'failed to retrieve data'}
-		}
-		return {error: null, data: reservation.rows, message: 'success'}
+		             try {
+			             const reservation = sqlPool.query(`SELECT * FROM reservations WHERE id = ${id}`)
+			             if(reservation.rowCount === 0) {
+				             return {error: 'no data found in  reservations table', data: [], message: 'failed to retrieve data'}
+			             }
+			             return {error: null, data: reservation.rows, message: 'success'}
 
+		             }catch (e) {
+						 return{error: e.message, data: [], message: 'failed to retrieve data'}
+		             }
 	}
-	static async getAllReservations() {
+	static async allReservations() {
 		const   reservations = sqlPool.query('SELECT * FROM reservations')
 		try {
-			if(reservations.rowCount === 0) {
+			if(reservations.rowCount === 0 || reservations.rows === 0) {
 				return {error: 'no data found in  reservations table', data: [], message: 'failed to retrieve data'}
 			}
 			return {error: null, data: reservations.rows, message: 'success'}
@@ -30,7 +34,7 @@ class Reservations {
 			}
 
 		}
-		static async updateReservationsById(reservations) {
+		static async updateReservationById(reservations) {
 
 				try {
 			const updateReservation = await sqlPool.query(`UPDATE reservations SET user_id = $reservations.userId, room_id = $reservations.roomId, check_in_date = $reservations.check_in_date, check_out_date = $reservations.check_out_date, status = ${reservations.status} WHERE id = $reservations.id`)
@@ -40,7 +44,7 @@ class Reservations {
                 }
 
         }
-        static async deleteReservationsById(id) {
+        static async deleteReservationById(id) {
                 try {
             const deleteReservation = await sqlPool.query(`DELETE FROM reservations WHERE id = $id`, [id])
 	                if(deleteReservation.rowCount === 0) {
