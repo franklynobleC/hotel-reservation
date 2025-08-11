@@ -19,7 +19,7 @@ app.use(express.json())
 
 app.use(cors())
 
-// app.use(cookieParser(process.env.JWT_SECRET))
+// anpm install create-readme --save-devpp.use(cookieParser(process.env.JWT_SECRET))
 app.use(express.static('./public'))
 // app.use(fileUpload({ useTempFiles: true }))
 
