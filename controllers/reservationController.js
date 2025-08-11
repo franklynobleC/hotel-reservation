@@ -19,9 +19,29 @@ const getReservations = async (req, res) => {
 }
 
 const getSingleReservation = async (req, res) => {
+  console.log('Getting single Reservations')
+  const  {id} = req.params
+  if(isNaN(id) || id === undefined) {
+    return res.status(StatusCodes.BAD_REQUEST).json({  error: 'invalid id', message: 'invalid id' })
+  }
+  const reservation = await  Reservations.getSingleReservations(id)
+
+    if(reservation.error) {
+      return res.status(StatusCodes.BAD_REQUEST).json({  error: reservation.error, message: reservation.message })
+
+
+  }
   return res.status(StatusCodes.OK).json({ message: `get SingleReservation` })
 }
 const deleteReservation = async (req, res) => {
+  const  {id} = req.params
+  if(isNaN(id) || id === undefined) {
+    return res.status(StatusCodes.BAD_REQUEST).json({  error: 'invalid id', message: 'invalid id' })
+  }
+  const deleteReservation  = await Reservations.deleteReservationById(id)
+  if(deleteReservation.error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({  error: deleteReservation.error, message: deleteReservation.message })
+  }
   return res.status(StatusCodes.OK).json({ message: `deleteReservation` })
 }
 const updateReservation = async (req, res) => {

@@ -12,7 +12,7 @@ class Reservations {
 	}
 	static async getSingleReservations(id) {
 		             try {
-			             const reservation = sqlPool.query(`SELECT * FROM reservations WHERE id = ${id}`)
+			             const reservation = await sqlPool.query(`SELECT * FROM reservations WHERE id = ${id}`)
 			             if(reservation.rowCount === 0) {
 				             return {error: 'no data found in  reservations table', data: [], message: 'failed to retrieve data'}
 			             }
@@ -23,11 +23,13 @@ class Reservations {
 		             }
 	}
 	static async allReservations() {
-		const   reservations = sqlPool.query('SELECT * FROM reservations')
+		const   reservations = await sqlPool.query('SELECT * FROM reservations')
+		console.log('All reservations Data', reservations)
 		try {
-			if(reservations.rowCount === 0 || reservations.rows === 0) {
+			if(reservations.rowCount === 0 && reservations.rows.length === 0) {
 				return {error: 'no data found in  reservations table', data: [], message: 'failed to retrieve data'}
 			}
+
 			return {error: null, data: reservations.rows, message: 'success'}
 		}catch (e) {
 			return {error: e.message, data: [], message: 'an error occurred, could  not get reservation data'}
@@ -38,7 +40,10 @@ class Reservations {
 
 				try {
 			const updateReservation = await sqlPool.query(`UPDATE reservations SET user_id = $reservations.userId, room_id = $reservations.roomId, check_in_date = $reservations.check_in_date, check_out_date = $reservations.check_out_date, status = ${reservations.status} WHERE id = $reservations.id`)
-			return {error: null, data: updateReservation.rows, message: 'success'}
+			      if(updateReservation.rows.length === 0) {
+					  return {error: `no data found in  reservations table with id ${reservations.id}`, data: [], message: 'failed to retrieve data'}
+			      }
+					return {error: null, data: updateReservation.rows, message: 'success'}
 		}catch (e) {
 					return {error: e.message, data: [], message: 'an error occurred, could  not update reservation data'}
                 }
@@ -46,9 +51,9 @@ class Reservations {
         }
         static async deleteReservationById(id) {
                 try {
-            const deleteReservation = await sqlPool.query(`DELETE FROM reservations WHERE id = $id`, [id])
+            const deleteReservation = await sqlPool.query('DELETE  FROM rooms WHERE room_id = $1 RETURNING *;', [id])
 	                if(deleteReservation.rowCount === 0) {
-		                return {error: 'could  not Delete Data', data:null, message: 'no data found with that id'}
+		                return {error: 'could  not Delete Data', data:null, message: `no data found with id ${id}`}
 
 	                }
             return {error: null, data: deleteReservation.rows, message: 'success'}
